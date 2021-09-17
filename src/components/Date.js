@@ -1,6 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
 import { DateTime } from 'luxon';
 
 console.log(
@@ -10,5 +7,3 @@ console.log(
     .endOf('day')
     .toISO()
 );
-
-ReactDOM.render(<App />, document.getElementById('root'));
