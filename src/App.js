@@ -1,5 +1,7 @@
+import AppRouter from './components/Router';
+
 function App() {
-  return <div className="App">리액트 실행!</div>;
+  return <AppRouter>정상적으로 작동</AppRouter>;
 }
 
 export default App;
