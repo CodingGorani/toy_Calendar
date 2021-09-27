@@ -2,10 +2,22 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const DayRec = styled.section`
-  border: 0.5px dotted;
+  display: flex;
+  border-width: 0px 0.5px 0.5px 0px;
+  border-style: solid;
 `;
 
-function Day({ month, day }) {
+const TodayMarked = styled.div`
+  background: red;
+  color: white;
+  width: 3em;
+  height: 3em;
+  border-radius: 1.5em;
+  text-align: center;
+  line-height: 1em;
+`;
+
+function Day({ today, month, day }) {
   const setDayLetterColor = () => {
     let letterColor;
     if (day.month !== month) {
@@ -22,7 +34,15 @@ function Day({ month, day }) {
   };
   return (
     <DayRec>
-      <h3 style={setDayLetterColor()}>{day.day}</h3>
+      {day.hasSame(today, 'day') ? (
+        <TodayMarked>
+          <h3>{day.day}일</h3>
+        </TodayMarked>
+      ) : (
+        <h3 style={setDayLetterColor()}>
+          {day.day === 1 ? `${day.month}월 ${day.day}일` : `${day.day}일`}
+        </h3>
+      )}
     </DayRec>
   );
 }

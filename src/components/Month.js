@@ -1,26 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { getOneMonthCalendar } from './Utils';
-import Day from './Day';
-
-const MonthCalendar = styled.div`
-  display: grid;
-  height: 100vh;
-  grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr);
-`;
+import Weekdays from './Weekdays';
+import { getOneMonthCalendar, get21MonthCalendar } from './Utils';
+import MonthCal from './MonthCal';
 
 function Month({ today }) {
   const [diff, setDiff] = useState(0);
   const [origin, setOrigin] = useState(today);
-  const [days, setDays] = useState(null);
+  const [months, setMonths] = useState(null);
 
   useEffect(() => {
     setOrigin(today.plus({ month: diff }));
   }, [diff]);
 
   useEffect(() => {
-    setDays(getOneMonthCalendar(origin));
+    setMonths(get21MonthCalendar(origin));
   }, [origin]);
 
   const handleDiffBtn = (e) => {
@@ -34,9 +28,9 @@ function Month({ today }) {
     });
   };
 
-  console.log('함수?', getOneMonthCalendar(origin));
+  console.log('함수?', get21MonthCalendar(origin));
   return (
-    <div>
+    <>
       <button name="previous" onClick={handleDiffBtn}>
         전
       </button>
@@ -44,12 +38,11 @@ function Month({ today }) {
       <button name="next" onClick={handleDiffBtn}>
         후
       </button>
-      <MonthCalendar>
-        {days
-          ? days.map((dt) => <Day key={dt.ts} month={origin.month} day={dt} />)
-          : 'loading'}
-      </MonthCalendar>
-    </div>
+      <Weekdays />
+      {months.map((month) => {
+        return <MonthCal today={today} origin={origin} days={month} />;
+      })}
+    </>
   );
 }
 
