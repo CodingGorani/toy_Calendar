@@ -10,7 +10,8 @@ const WeekdayBar = styled.header`
 `;
 
 const WeekdayRec = styled.div`
-  background: white;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
   border-width: 0 0.5px 0.5px 0;
   border-style: solid;
   height: 100%;

@@ -9,10 +9,25 @@ import {
 import MonthCalWeek from './MonthCalWeek';
 
 const View = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   overflow: auto;
   height: 100vh;
   width: 95vw;
-  scroll-snap-stlye: y mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const MonthCalBody = styled.div`
+  width: 100%;
+  height: 90vh;
+  margin-top: 50px;
+  overflow-y: scroll;
+  scroll-snap-type: y proximity;
   -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -55,7 +70,7 @@ function Month({ today }) {
       </button>
       <View>
         <MonthCalHeader />
-        <div style={{ marginTop: '50px' }}>
+        <MonthCalBody>
           {weeksData
             ? weeksData.map((week) => {
                 return (
@@ -63,7 +78,7 @@ function Month({ today }) {
                 );
               })
             : 'loading'}
-        </div>
+        </MonthCalBody>
       </View>
     </>
   );
