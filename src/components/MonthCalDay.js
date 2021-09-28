@@ -17,10 +17,10 @@ const TodayMarked = styled.div`
   line-height: 1em;
 `;
 
-function Day({ today, month, day }) {
+function MonthCalDay({ today, origin, day }) {
   const setDayLetterColor = () => {
     let letterColor;
-    if (day.month !== month) {
+    if (!day.hasSame(origin, 'month')) {
       letterColor = 'grey';
     } else if (day.weekday === 7) {
       letterColor = 'red';
@@ -47,4 +47,4 @@ function Day({ today, month, day }) {
   );
 }
 
-export default Day;
+export default MonthCalDay;

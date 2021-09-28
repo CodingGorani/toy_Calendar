@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Weekdays from './Weekdays';
-import { getOneMonthCalendar, get21MonthCalendar } from './Utils';
-import MonthCal from './MonthCal';
+import MonthCalHeader from './MonthCalHeader';
+import {
+  getOneMonthCalendar,
+  get21MonthCalendar,
+  composeCalendarWithWeeks,
+} from './Utils';
+import MonthCalWeek from './MonthCalWeek';
+
+const View = styled.div`
+  overflow: auto;
+  height: 100vh;
+  width: 95vw;
+  scroll-snap-stlye: y mandatory;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 function Month({ today }) {
   const [diff, setDiff] = useState(0);
   const [origin, setOrigin] = useState(today);
-  const [months, setMonths] = useState(null);
+  const [weeksData, setWeeksData] = useState(null);
 
   useEffect(() => {
     setOrigin(today.plus({ month: diff }));
   }, [diff]);
 
   useEffect(() => {
-    setMonths(get21MonthCalendar(origin));
+    setWeeksData(composeCalendarWithWeeks(origin));
   }, [origin]);
 
   const handleDiffBtn = (e) => {
@@ -28,7 +44,6 @@ function Month({ today }) {
     });
   };
 
-  console.log('함수?', get21MonthCalendar(origin));
   return (
     <>
       <button name="previous" onClick={handleDiffBtn}>
@@ -38,10 +53,18 @@ function Month({ today }) {
       <button name="next" onClick={handleDiffBtn}>
         후
       </button>
-      <Weekdays />
-      {months.map((month) => {
-        return <MonthCal today={today} origin={origin} days={month} />;
-      })}
+      <View>
+        <MonthCalHeader />
+        <div style={{ marginTop: '50px' }}>
+          {weeksData
+            ? weeksData.map((week) => {
+                return (
+                  <MonthCalWeek today={today} origin={origin} week={week} />
+                );
+              })
+            : 'loading'}
+        </div>
+      </View>
     </>
   );
 }
