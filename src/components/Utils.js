@@ -4,7 +4,7 @@
 
 export const composeCalendarWithWeeks = (date) => {
   let calendars = [];
-  for (let i = -50; i <= 50; i++) {
+  for (let i = -6; i <= 11; i++) {
     const firstDayOfWeek = date
       .plus({ weeks: i })
       .startOf('week')
@@ -33,9 +33,9 @@ export const getOneMonthCalendar = (date) => {
     });
 };
 
-export const get21MonthCalendar = (date) => {
+export const get5MonthCalendar = (date) => {
   let calendars = [];
-  for (let i = -10; i <= 10; i++) {
+  for (let i = -2; i <= 2; i++) {
     const firstDay = date.plus({ months: i }).startOf('month');
     const calendar = Array(42)
       .fill()

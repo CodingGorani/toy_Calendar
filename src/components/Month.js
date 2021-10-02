@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MonthCalHeader from './MonthCalHeader';
-import {
-  getOneMonthCalendar,
-  get21MonthCalendar,
-  composeCalendarWithWeeks,
-} from './Utils';
-import MonthCalWeek from './MonthCalWeek';
+import MonthCalBody from './MonthCalBody';
+import { composeCalendarWithWeeks } from './Utils';
 
 const View = styled.div`
   display: flex;
@@ -22,30 +18,17 @@ const View = styled.div`
   }
 `;
 
-const MonthCalBody = styled.div`
-  width: 100%;
-  height: 90vh;
-  margin-top: 50px;
-  overflow-y: scroll;
-  scroll-snap-type: y proximity;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
 function Month({ today }) {
   const [diff, setDiff] = useState(0);
   const [origin, setOrigin] = useState(today);
-  const [weeksData, setWeeksData] = useState(null);
+  const [monthData, setMonthData] = useState(null);
 
   useEffect(() => {
     setOrigin(today.plus({ month: diff }));
-  }, [diff]);
+  }, [diff, today]);
 
   useEffect(() => {
-    setWeeksData(composeCalendarWithWeeks(origin));
+    setMonthData(composeCalendarWithWeeks(origin));
   }, [origin]);
 
   const handleDiffBtn = (e) => {
@@ -70,15 +53,7 @@ function Month({ today }) {
       </button>
       <View>
         <MonthCalHeader />
-        <MonthCalBody>
-          {weeksData
-            ? weeksData.map((week) => {
-                return (
-                  <MonthCalWeek today={today} origin={origin} week={week} />
-                );
-              })
-            : 'loading'}
-        </MonthCalBody>
+        <MonthCalBody today={today} origin={origin} monthData={monthData} />
       </View>
     </>
   );
