@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MonthCalHeader from './MonthCalHeader';
 import MonthCalBody from './MonthCalBody';
-import { composeCalendarWithWeeks } from './Utils';
+import { composeCalendarWithWeeks, getOneMonthCalendar } from './Utils';
 
 const View = styled.div`
   display: flex;
@@ -28,7 +28,7 @@ function Month({ today }) {
   }, [diff, today]);
 
   useEffect(() => {
-    setMonthData(composeCalendarWithWeeks(origin));
+    setMonthData(getOneMonthCalendar(origin));
   }, [origin]);
 
   const handleDiffBtn = (e) => {
