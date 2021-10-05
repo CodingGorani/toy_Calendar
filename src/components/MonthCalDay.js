@@ -5,6 +5,7 @@ const DayRec = styled.section`
   display: flex;
   border-width: 0px 0.5px 0.5px 0px;
   border-style: solid;
+  background: white;
 `;
 
 const TodayMarked = styled.div`

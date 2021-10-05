@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const WeekdayBar = styled.header`
   position: fixed;
-  width: 95vw;
+  width: 80%;
+  max-width: 1200px;
   height: 50px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -10,10 +11,8 @@ const WeekdayBar = styled.header`
 `;
 
 const WeekdayRec = styled.div`
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border-width: 0 0.5px 0.5px 0;
-  border-style: solid;
+  color: black;
+
   height: 100%;
   line-height: 50px;
 `;
