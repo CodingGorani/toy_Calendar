@@ -4,13 +4,27 @@ import styled, { css, keyframes } from 'styled-components';
 import MonthCalDay from './MonthCalDay';
 import { v4 as uuidv4 } from 'uuid';
 
-const nextMonth = keyframes`
+const toNext = keyframes`
   0%{
     transform: translateY(0%);
   }
   100%{
-    transform: translateY(100%);
+    transform: translateY(-100%);
   }
+`;
+
+const toPrevious = keyframes`
+0%{
+  transform: translateY(0%);
+}
+100%{
+  transform: translateY(100%);
+}
+`;
+
+const calendarTransition = css`
+  animation: ${(props) => (props.motion === 'up' ? toNext : toPrevious)} 0.5s
+    ease-in 0s;
 `;
 
 const CalendarBody = styled.div`
@@ -23,6 +37,7 @@ const CalendarBody = styled.div`
   max-width: 1200px;
   height: 80vh;
   box-shadow: 0 1px 35px 1px rgba(0, 0, 0, 0.1);
+  ${(props) => (props.motion ? calendarTransition : 'animation: none;')};
 
   ${(props) =>
     props.dragging &&
@@ -35,8 +50,9 @@ const CalendarBody = styled.div`
     css`
       position: absolute;
       z-index: -1;
-      top: -10px;
+      top: -50px;
       filter: brightness(98%);
+      transform: scale(0.98, 0.98);
     `}
 
   ${(props) =>
@@ -46,32 +62,17 @@ const CalendarBody = styled.div`
       z-index: -2;
       top: 70px;
       filter: brightness(98%);
+      transform: scale(0.98, 0.98);
     `}
-  animation: ${(props) => {
-    if (props.goNextMonth) {
-      return `${nextMonth} 2s ease-in 1s infinite;`;
-    } else if (props.goPreviousMonth) {
-      return `${nextMonth} 2s ease-in 1s infinite;`;
-    }
-    return 'none';
-  }}
 `;
 
 function MonthCalBody({ today, origin, monthData, handleDiff }) {
-  const [dragging, setDragging] = useState(false);
-  const [goingDown, setGoingDown] = useState(false);
-  const [goingUp, setGoingUp] = useState(false);
-  const draggingNode = useRef(null);
+  const [goingUpOrDown, setGoingUpOrDown] = useState(undefined);
   const moveRef = useRef(null);
 
-  const handleDragStart = (e) => {
-    draggingNode.current = e.target;
-    moveRef.current = e.pageY;
-    draggingNode.current.addEventListener('dragend', handleDragEnd);
-    setTimeout(() => {
-      setDragging(true);
-    }, 0);
-  };
+  useEffect(() => {
+    setGoingUpOrDown(undefined);
+  }, []);
 
   const handleMouseDown = (e) => {
     moveRef.current = e.pageY;
@@ -80,34 +81,14 @@ function MonthCalBody({ today, origin, monthData, handleDiff }) {
   const handleMouseUp = (e) => {
     if (e.pageY < moveRef.current) {
       handleDiff('next');
-      setGoingUp(true);
+      setGoingUpOrDown('up');
+      console.log('넥스트로 갈 때', goingUpOrDown);
     } else if (e.pageY > moveRef.current) {
       handleDiff('previous');
-      setGoingDown(true);
+      setGoingUpOrDown('down');
+      console.log('프리비우스로 갈 때', goingUpOrDown);
     }
     moveRef.current = null;
-    setTimeout(() => {
-      setGoingUp(false);
-      setGoingDown(false);
-    }, 0);
-  };
-
-  const handleDragEnd = (e) => {
-    draggingNode.current.removeEventListener('dragend', handleDragEnd);
-
-    if (e.pageY < moveRef.current) {
-      handleDiff('next');
-      setGoingUp(true);
-    } else if (e.pageY > moveRef.current) {
-      handleDiff('previous');
-      setGoingDown(true);
-    }
-
-    draggingNode.current = null;
-    moveRef.current = null;
-    setDragging(false);
-    setGoingUp(false);
-    setGoingDown(false);
   };
 
   return (
@@ -130,9 +111,7 @@ function MonthCalBody({ today, origin, monthData, handleDiff }) {
       <CalendarBody
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
-        dragging={dragging}
-        goNextMonth={goingUp}
-        goPreviousMonth={goingDown}
+        motion={goingUpOrDown}
       >
         {monthData &&
           monthData.map((day, i) => (
