@@ -3,8 +3,10 @@ import styled from 'styled-components';
 
 const DayRec = styled.section`
   display: flex;
-  border-width: 0px 0.5px 0.5px 0px;
-  border-style: solid;
+  border-right: ${(props) => (props.rightEdge ? 0 : '0.5px')} solid
+    rgba(0, 0, 0, 0.1);
+  border-bottom: ${(props) => (props.bottomEdge ? 0 : '0.5px')} solid
+    rgba(0, 0, 0, 0.1);
   background: white;
 `;
 
@@ -18,7 +20,7 @@ const TodayMarked = styled.div`
   line-height: 1em;
 `;
 
-function MonthCalDay({ today, origin, day }) {
+function MonthCalDay({ today, origin, day, index }) {
   const setDayLetterColor = () => {
     let letterColor;
     if (!day.hasSame(origin, 'month')) {
@@ -33,8 +35,9 @@ function MonthCalDay({ today, origin, day }) {
 
     return { color: letterColor };
   };
+
   return (
-    <DayRec>
+    <DayRec rightEdge={index % 7 === 6} bottomEdge={index >= 35 && index <= 41}>
       {day.hasSame(today, 'day') ? (
         <TodayMarked>
           <h3>{day.day}일</h3>
