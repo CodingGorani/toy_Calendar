@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import MonthCalWeek from './MonthCalWeek';
 import styled, { css, keyframes } from 'styled-components';
 import MonthCalDay from './MonthCalDay';
+import MonthCalHeader from './MonthCalHeader';
 import { v4 as uuidv4 } from 'uuid';
 
 const toNext = keyframes`
@@ -9,7 +10,7 @@ const toNext = keyframes`
     transform: translateY(0%);
   }
   100%{
-    transform: translateY(-100%);
+    transform: translateY(-90%);
   }
 `;
 
@@ -18,7 +19,7 @@ const toPrevious = keyframes`
   transform: translateY(0%);
 }
 100%{
-  transform: translateY(100%);
+  transform: translateY(90%);
 }
 `;
 
@@ -34,9 +35,10 @@ const CalendarBody = styled.div`
   padding: 2em;
   background: white;
   width: 80%;
-  max-width: 1200px;
+  max-width: 1000px;
   height: 80vh;
   box-shadow: 0 1px 35px 1px rgba(0, 0, 0, 0.1);
+
   ${(props) => (props.motion ? calendarTransition : 'animation: none;')};
 
   ${(props) =>
@@ -68,27 +70,29 @@ const CalendarBody = styled.div`
 
 function MonthCalBody({ today, origin, monthData, handleDiff }) {
   const [goingUpOrDown, setGoingUpOrDown] = useState(undefined);
-  const moveRef = useRef(null);
+  const [diff, setDiff] = useState(0);
 
-  useEffect(() => {
-    setGoingUpOrDown(undefined);
-  }, []);
-
-  const handleMouseDown = (e) => {
-    moveRef.current = e.pageY;
-  };
-
-  const handleMouseUp = (e) => {
-    if (e.pageY < moveRef.current) {
-      handleDiff('next');
-      setGoingUpOrDown('up');
-      console.log('넥스트로 갈 때', goingUpOrDown);
-    } else if (e.pageY > moveRef.current) {
-      handleDiff('previous');
-      setGoingUpOrDown('down');
-      console.log('프리비우스로 갈 때', goingUpOrDown);
+  const handleMouseWheel = async (e) => {
+    console.log(e.deltaY);
+    await setDiff((prev) => {
+      if (Math.abs(prev) < Math.abs(e.deltaY)) {
+        return e.deltaY;
+      }
+      return 0;
+    });
+    if (Math.abs(diff) > 50) {
+      if (diff < 0) {
+        setGoingUpOrDown('down');
+        handleDiff('previous');
+      } else if (diff > 0) {
+        setGoingUpOrDown('up');
+        handleDiff('next');
+      }
+      setDiff(0);
+      setTimeout(() => {
+        setGoingUpOrDown(undefined);
+      }, 1000);
     }
-    moveRef.current = null;
   };
 
   return (
@@ -109,10 +113,11 @@ function MonthCalBody({ today, origin, monthData, handleDiff }) {
           })}
       </CalendarBody>
       <CalendarBody
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
+        onWheelCapture={handleMouseWheel}
         motion={goingUpOrDown}
+        diff={diff}
       >
+        <MonthCalHeader />
         {monthData &&
           monthData.map((day, i) => (
             <MonthCalDay

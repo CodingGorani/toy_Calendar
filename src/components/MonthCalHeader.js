@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const WeekdayBar = styled.header`
   position: fixed;
   width: 80%;
-  max-width: 1200px;
+  max-width: 1000px;
   height: 50px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);

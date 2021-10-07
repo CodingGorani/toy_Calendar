@@ -62,7 +62,6 @@ function Month({ today }) {
         후
       </button>
       <View>
-        <MonthCalHeader />
         <MonthCalBody
           handleDiff={handleDiff}
           today={today}
