@@ -1,18 +1,18 @@
 import styled from 'styled-components';
 
 const WeekdayBar = styled.header`
+  padding: 0 2em;
   position: fixed;
-  width: 80%;
   max-width: 1000px;
+  width: 80%;
   height: 50px;
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  text-align: center;
+  display: flex;
 `;
 
 const WeekdayRec = styled.div`
   color: black;
-
+  flex: 1 1;
+  text-align: center;
   height: 100%;
   line-height: 50px;
 `;

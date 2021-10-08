@@ -24,7 +24,7 @@ function MonthCalDay({ today, origin, day, index }) {
   const setDayLetterColor = () => {
     let letterColor;
     if (!day.hasSame(origin, 'month')) {
-      letterColor = 'grey';
+      letterColor = 'rgba(0,0,0, 0.2';
     } else if (day.weekday === 7) {
       letterColor = 'red';
     } else if (day.weekday === 6) {

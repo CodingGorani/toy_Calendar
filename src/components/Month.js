@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MonthCalHeader from './MonthCalHeader';
 import MonthCalBody from './MonthCalBody';
-import { composeCalendarWithWeeks, getOneMonthCalendar } from './Utils';
+import { get5MonthCalendar } from './Utils';
 
 const View = styled.div`
+  padding: 3em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,26 +21,33 @@ const View = styled.div`
 `;
 
 function Month({ today }) {
-  const [diff, setDiff] = useState(0);
+  const [action, setAction] = useState(undefined);
   const [origin, setOrigin] = useState(today);
   const [monthData, setMonthData] = useState(null);
 
   useEffect(() => {
-    setOrigin(today.plus({ month: diff }));
-  }, [diff, today]);
+    if (action === 'previous') {
+      setOrigin((prev) => prev.minus({ month: 1 }));
+      console.log('previous 작동');
+    } else if (action === 'next') {
+      setOrigin((prev) => prev.plus({ month: 1 }));
+      console.log('next 작동');
+    }
+  }, [action]);
 
   useEffect(() => {
-    setMonthData(getOneMonthCalendar(origin));
+    setMonthData(get5MonthCalendar(origin));
   }, [origin]);
 
-  const handleDiff = (action) => {
-    setDiff((prev) => {
-      if (action === 'previous') {
-        return prev - 1;
-      } else if (action === 'next') {
-        return prev + 1;
-      }
-    });
+  useEffect(() => {
+    setAction(undefined);
+  });
+
+  const handleDiff = (string) => {
+    if (action !== undefined) {
+      setAction(undefined);
+    }
+    setAction(string);
   };
 
   return (
