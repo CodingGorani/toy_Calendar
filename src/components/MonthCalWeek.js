@@ -3,20 +3,18 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import MonthCalDay from './MonthCalDay';
 
-const OneMonth = styled.div`
-  padding: 2em 0;
-  height: 100%;
-  width: 100%;
+const OneWeek = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  scroll-snap-align: center;
+  height: calc(100% / 6);
 `;
 
-function MonthCalMonth({ today, origin, month }) {
+function MonthCalWeek({ today, origin, week }) {
+  console.log(week);
   return (
-    <OneMonth>
-      {month &&
-        month.map((day, i) => (
+    <OneWeek>
+      {week &&
+        week.map((day, i) => (
           <MonthCalDay
             index={i}
             key={uuidv4()}
@@ -25,8 +23,8 @@ function MonthCalMonth({ today, origin, month }) {
             day={day}
           />
         ))}
-    </OneMonth>
+    </OneWeek>
   );
 }
 
-export default MonthCalMonth;
+export default MonthCalWeek;

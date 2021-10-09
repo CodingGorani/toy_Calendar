@@ -1,11 +1,10 @@
 import styled from 'styled-components';
 
 const WeekdayBar = styled.header`
-  padding: 0 2em;
-  position: fixed;
+  position: relative;
+  padding: 0;
   max-width: 1000px;
-  width: 80%;
-  height: 50px;
+  height: 25px;
   display: flex;
 `;
 

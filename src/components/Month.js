@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MonthCalHeader from './MonthCalHeader';
 import MonthCalBody from './MonthCalBody';
-import { get5MonthCalendar } from './Utils';
+import { composeCalendarWithWeeks, get5MonthCalendar } from './Utils';
 
 const View = styled.div`
   padding: 3em;
@@ -23,7 +23,7 @@ const View = styled.div`
 function Month({ today }) {
   const [action, setAction] = useState(undefined);
   const [origin, setOrigin] = useState(today);
-  const [monthData, setMonthData] = useState(null);
+  const [weeksData, setweeksData] = useState(null);
 
   useEffect(() => {
     if (action === 'previous') {
@@ -36,7 +36,7 @@ function Month({ today }) {
   }, [action]);
 
   useEffect(() => {
-    setMonthData(get5MonthCalendar(origin));
+    setweeksData(composeCalendarWithWeeks(origin));
   }, [origin]);
 
   useEffect(() => {
@@ -74,7 +74,7 @@ function Month({ today }) {
           handleDiff={handleDiff}
           today={today}
           origin={origin}
-          monthData={monthData}
+          weeksData={weeksData}
         />
       </View>
     </>
