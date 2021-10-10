@@ -13,7 +13,9 @@ const OneWeek = styled.div`
 function MonthCalWeek({ today, origin, week }) {
   console.log(week);
   const isFirstWeek = () => {
-    return !week[0].hasSame(week[6], 'month');
+    return (
+      !week[0].hasSame(week[6], 'month') || week[0] === week[0].startOf('month')
+    );
   };
 
   return (

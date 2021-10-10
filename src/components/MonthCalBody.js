@@ -26,37 +26,52 @@ const CalendarContainer = styled.div`
 `;
 
 const CalendarBody = styled.div`
+  flex: 1;
   width: 100%;
   overflow-y: auto;
   scroll-snap-type: y mandatory;
 `;
 
+const createScrollStopListener = (element, callback, timeout) => {
+  let removed = false;
+  let handle = null;
+  const onScroll = () => {
+    if (handle) {
+      clearTimeout(handle);
+    }
+    handle = setTimeout(callback, timeout || 200);
+  };
+  element.addEventListener('scroll', onScroll);
+  return () => {
+    if (removed) {
+      return;
+    }
+    removed = true;
+    if (handle) {
+      clearTimeout(handle);
+    }
+    element.removeEventListener('scroll', onScroll);
+  };
+};
+
 function MonthCalBody({ today, origin, weeksData, handleDiff }) {
-  const weeksRef = useRef(null);
+  const containerRef = useRef();
 
-  // useEffect(() => {
-  //   const children = monthRef.current.children;
-  //   const distance = children[0].clientHeight + children[1].clientHeight;
-  //   monthRef.current.scrollTo(0, distance);
-  //   console.log(monthRef.current.children[2].clientHeight);
-  // });
+  useEffect(() => {
+    const destroyListener = createScrollStopListener(
+      containerRef.current,
+      () => {
+        console.log('onscrollstop');
+      }
+    );
 
-  // const handleScroll = (e) => {
-  //   if (
-  //     monthRef.current.scrollTop === monthRef.current.children[1].scrollHeight
-  //   ) {
-  //     handleDiff('previous');
-  //   } else if (
-  //     monthRef.current.scrollTop === monthRef.current.children[2].scrollHeight
-  //   ) {
-  //     handleDiff('next');
-  //   }
-  // };
+    return () => destroyListener();
+  }, []);
 
   return (
     <CalendarContainer>
       <MonthCalHeader />
-      <CalendarBody>
+      <CalendarBody ref={containerRef}>
         {weeksData
           ? weeksData.map((week, index) => (
               <MonthCalWeek

@@ -4,7 +4,32 @@
 
 export const composeCalendarWithWeeks = (date) => {
   let calendars = [];
-  for (let i = -6; i <= 11; i++) {
+  const weekDiffFromFirstdayOfOneMonthBefore = (today) => {
+    let firstDay = today.minus({ months: 1 }).startOf('month');
+    let result = firstDay.weekNumber - today.weekNumber;
+    if (firstDay.weekday === 7) {
+      return result + 1;
+    }
+    return result;
+  };
+  const weekDiffFromLastdayOfOneMonthLater = (today) => {
+    let lastDay = today.plus({ months: 1 }).endOf('month');
+    let result = lastDay.weekNumber - today.weekNumber;
+    if (lastDay.weekday === 7) {
+      return result + 1;
+    }
+    return result;
+  };
+  console.group('composeCalendarWithWeeks');
+  console.log(weekDiffFromFirstdayOfOneMonthBefore(date));
+  console.log(weekDiffFromLastdayOfOneMonthLater(date));
+  console.groupEnd();
+
+  for (
+    let i = weekDiffFromFirstdayOfOneMonthBefore(date);
+    i <= weekDiffFromLastdayOfOneMonthLater(date);
+    i++
+  ) {
     const firstDayOfWeek = date
       .plus({ weeks: i })
       .startOf('week')
@@ -12,8 +37,8 @@ export const composeCalendarWithWeeks = (date) => {
     calendars.push(
       Array(7)
         .fill()
-        .map((_, i) => {
-          return firstDayOfWeek.plus({ days: i });
+        .map((_, index) => {
+          return firstDayOfWeek.plus({ days: index });
         })
     );
   }
