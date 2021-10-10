@@ -28,6 +28,7 @@ const CalendarContainer = styled.div`
 const CalendarBody = styled.div`
   width: 100%;
   overflow-y: auto;
+  scroll-snap-type: y mandatory;
 `;
 
 function MonthCalBody({ today, origin, weeksData, handleDiff }) {
