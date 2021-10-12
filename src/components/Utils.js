@@ -1,33 +1,45 @@
 // [[1주], [2주], [3주]....]
 // 이중배열을 이용한다.
 // 자신이 속해있는 주의 앞으로 25주, 뒤로 25주 불러온다.
+const weekDiffFromFirstdayOfTwoMonthBefore = (today) => {
+  let firstDayOfTwoMonthBefore = today.minus({ months: 2 }).startOf('month');
+  let result = -today.diff(firstDayOfTwoMonthBefore, 'weeks').toObject().weeks;
+  if (firstDayOfTwoMonthBefore.weekday === 7) {
+    return result + 1;
+  }
+  return result;
+};
+const weekDiffFromLastdayOfTwoMonthLater = (today) => {
+  let lastDayOfTwoMonthLater = today
+    .plus({ months: 2 })
+    .startOf('month')
+    .plus({ weeks: 6 });
+
+  let result = -today.diff(lastDayOfTwoMonthLater, 'weeks').toObject().weeks;
+  if (lastDayOfTwoMonthLater.weekday === 7) {
+    return result + 1;
+  }
+  return result;
+};
+
+const isFirstWeekOfMonth = (firstDay, lastDay) => {
+  return (
+    firstDay.hasSame(firstDay.startOf('month'), 'day') ||
+    !firstDay.hasSame(lastDay, 'month')
+  );
+};
 
 export const composeCalendarWithWeeks = (date) => {
+  let resultObj = {
+    calendars: undefined,
+    firstWeeks: undefined,
+  };
   let calendars = [];
-  const weekDiffFromFirstdayOfOneMonthBefore = (today) => {
-    let firstDay = today.minus({ months: 1 }).startOf('month');
-    let result = firstDay.weekNumber - today.weekNumber;
-    if (firstDay.weekday === 7) {
-      return result + 1;
-    }
-    return result;
-  };
-  const weekDiffFromLastdayOfOneMonthLater = (today) => {
-    let lastDay = today.plus({ months: 1 }).endOf('month');
-    let result = lastDay.weekNumber - today.weekNumber;
-    if (lastDay.weekday === 7) {
-      return result + 1;
-    }
-    return result;
-  };
-  console.group('composeCalendarWithWeeks');
-  console.log(weekDiffFromFirstdayOfOneMonthBefore(date));
-  console.log(weekDiffFromLastdayOfOneMonthLater(date));
-  console.groupEnd();
+  let firstWeeks = [];
 
   for (
-    let i = weekDiffFromFirstdayOfOneMonthBefore(date);
-    i <= weekDiffFromLastdayOfOneMonthLater(date);
+    let i = weekDiffFromFirstdayOfTwoMonthBefore(date);
+    i <= weekDiffFromLastdayOfTwoMonthLater(date);
     i++
   ) {
     const firstDayOfWeek = date
@@ -42,7 +54,17 @@ export const composeCalendarWithWeeks = (date) => {
         })
     );
   }
-  return calendars;
+
+  calendars.map((el, idx) => {
+    if (isFirstWeekOfMonth(el[0], el[6])) {
+      firstWeeks.push(idx);
+    }
+  });
+
+  resultObj.calendars = calendars;
+  resultObj.firstWeeks = firstWeeks;
+
+  return resultObj;
 };
 
 export const getOneMonthCalendar = (date) => {

@@ -23,7 +23,9 @@ const View = styled.div`
 function Month({ today }) {
   const [action, setAction] = useState(undefined);
   const [origin, setOrigin] = useState(today);
-  const [weeksData, setweeksData] = useState(null);
+  const [weeksData, setweeksData] = useState(() =>
+    composeCalendarWithWeeks(origin)
+  );
 
   useEffect(() => {
     if (action === 'previous') {
@@ -34,10 +36,6 @@ function Month({ today }) {
       console.log('next 작동');
     }
   }, [action]);
-
-  useEffect(() => {
-    setweeksData(composeCalendarWithWeeks(origin));
-  }, [origin]);
 
   useEffect(() => {
     setAction(undefined);
