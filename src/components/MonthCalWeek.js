@@ -7,19 +7,11 @@ const OneWeek = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   height: calc(100% / 6);
-  scroll-snap-align: ${(props) => (props.isFirstWeek ? 'start' : 'none')};
 `;
 
 function MonthCalWeek({ today, origin, week }) {
-  const isFirstWeek = () => {
-    return (
-      !week[0].hasSame(week[6], 'month') ||
-      week[0].hasSame(week[0].startOf('month'), 'day')
-    );
-  };
-
   return (
-    <OneWeek isFirstWeek={isFirstWeek()}>
+    <OneWeek>
       {week &&
         week.map((day, i) => (
           <MonthCalDay

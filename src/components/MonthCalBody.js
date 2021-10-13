@@ -56,19 +56,11 @@ const createScrollStopListener = (element, callback, timeout) => {
 
 function MonthCalBody({ today, origin, weeksData, handleDiff }) {
   const containerRef = useRef();
-  const [weeks, setWeeks] = useState(undefined);
-  const [firstWeeks, setFirstWeeks] = useState(undefined);
+  const [weeks, setWeeks] = useState([]);
 
   useEffect(() => {
-    setWeeks(weeksData.calendars);
-    setFirstWeeks(weeksData.firstWeeks);
+    setWeeks(weeksData);
   }, [weeksData]);
-
-  useEffect(() => {
-    if (firstWeeks) {
-      containerRef.current.children[firstWeeks[2]].scrollIntoView();
-    }
-  }, [firstWeeks]);
 
   useEffect(() => {
     const destroyListener = createScrollStopListener(
@@ -94,7 +86,7 @@ function MonthCalBody({ today, origin, weeksData, handleDiff }) {
                 week={week}
               />
             ))
-          : Array(5)
+          : Array(7)
               .fill()
               .map((_, i) => <Dummy key={i} />)}
       </CalendarBody>
