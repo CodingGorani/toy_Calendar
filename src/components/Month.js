@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import MonthCalHeader from './MonthCalHeader';
 import MonthCalBody from './MonthCalBody';
-import { composeOneMonth } from './Utils';
+import { composeOneMonthWith6Weeks } from './Utils';
 
 const View = styled.div`
   padding: 3em;
@@ -24,11 +24,11 @@ function Month({ today }) {
   const [action, setAction] = useState(undefined);
   const [origin, setOrigin] = useState(today);
   const [weekCalendars, setWeekCalendars] = useState(() =>
-    composeOneMonth(today)
+    composeOneMonthWith6Weeks(today)
   );
 
   useEffect(() => {
-    setWeekCalendars(composeOneMonth(origin));
+    setWeekCalendars(composeOneMonthWith6Weeks(origin));
   }, [origin]);
 
   useEffect(() => {
@@ -38,6 +38,9 @@ function Month({ today }) {
     } else if (action === 'next') {
       setOrigin((prev) => prev.plus({ month: 1 }));
       console.log('next 작동');
+    } else if (action === 'today') {
+      setOrigin(today);
+      console.log('today 작동');
     }
   }, [action]);
 
@@ -62,7 +65,14 @@ function Month({ today }) {
       >
         전
       </button>
-      오늘은 {origin.year}년 {origin.month}월 {origin.day}일 입니다.
+      <button
+        name="today"
+        onClick={() => {
+          handleDiff('today');
+        }}
+      >
+        오늘
+      </button>
       <button
         name="next"
         onClick={() => {
@@ -71,6 +81,9 @@ function Month({ today }) {
       >
         후
       </button>
+      <h1>
+        {origin.year}년 {origin.month}월
+      </h1>
       <View>
         <MonthCalBody
           handleDiff={handleDiff}

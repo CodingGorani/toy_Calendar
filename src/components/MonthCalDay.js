@@ -7,7 +7,7 @@ const DayRec = styled.section`
     rgba(0, 0, 0, 0.1);
   border-bottom: ${(props) => (props.bottomEdge ? 0 : '0.5px')} solid
     rgba(0, 0, 0, 0.1);
-  background: white;
+  background: none;
 `;
 
 const TodayMarked = styled.div`
